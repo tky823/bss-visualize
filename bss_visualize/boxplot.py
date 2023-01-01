@@ -7,6 +7,7 @@ from matplotlib.lines import Line2D
 
 box_alpha = 0.3
 box_edgewidth = 2
+marker_edgewidth = 2
 axis_linewidth = 2
 majorgrid_linewidth = 1.5
 
@@ -18,6 +19,9 @@ def boxplot_by_group(
     names: List[str],
     width: Optional[Union[float, List[float]]] = None,
     margin: Optional[float] = None,
+    show_means: bool = False,
+    marker: str = None,
+    markersize: int = None,
     show_zero_xaxis: bool = True,
     palette: Optional[List[Tuple[float, float, float]]] = None,
 ) -> List[Line2D]:
@@ -37,6 +41,17 @@ def boxplot_by_group(
     if margin is None:
         margin = 0.75 / len(names)
 
+    if show_means:
+        if marker is None:
+            marker = "+"
+        if markersize is None:
+            markersize = 10
+    else:
+        if marker is not None:
+            raise ValueError("marker parameter is given, but ignored.")
+        if markersize is not None:
+            raise ValueError("markersize parameter is given, but ignored.")
+
     if show_zero_xaxis:
         ax.axhline(y=0, color="black", linewidth=axis_linewidth)
 
@@ -52,6 +67,7 @@ def boxplot_by_group(
             widths=widths,
             labels=labels,
             patch_artist=True,
+            showmeans=show_means,
         )
 
         for xticklabel_idx in range(len(labels)):
@@ -61,6 +77,16 @@ def boxplot_by_group(
             boxplot["boxes"][xticklabel_idx].set_facecolor((r, g, b, box_alpha))
             boxplot["boxes"][xticklabel_idx].set(edgecolor=color, linewidth=box_edgewidth)
             boxplot["medians"][xticklabel_idx].set(color=color, linewidth=box_edgewidth)
+
+            if show_means:
+                boxplot["means"][xticklabel_idx].set(
+                    marker=marker,
+                    markerfacecolor=(r, g, b, box_alpha),
+                    markeredgecolor=color,
+                    markeredgewidth=marker_edgewidth,
+                    markersize=markersize,
+                )
+
             boxplot["fliers"][xticklabel_idx].set(
                 markeredgecolor=color, markeredgewidth=box_edgewidth
             )
