@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import seaborn as sns
 from matplotlib.axes import Axes
+from matplotlib.lines import Line2D
 
 box_alpha = 0.3
 box_edgewidth = 2
@@ -17,7 +18,7 @@ def boxplot_by_group(
     width: Optional[Union[float, List[float]]] = None,
     margin: Optional[float] = None,
     palette: Optional[List[Tuple[float, float, float]]] = None,
-):
+) -> List[Line2D]:
     if palette is None:
         palette = sns.color_palette()
 
@@ -34,7 +35,7 @@ def boxplot_by_group(
     if margin is None:
         margin = 0.75 / len(names)
 
-    handles = []
+    handles: List[Line2D] = []
 
     for name_idx in range(len(names)):
         name = names[name_idx]
@@ -80,4 +81,4 @@ def boxplot_by_group(
     ax.set_xticks(xticks)
     ax.set_xticklabels(labels)
 
-    return ax, handles
+    return handles
