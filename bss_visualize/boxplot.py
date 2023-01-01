@@ -7,6 +7,7 @@ from matplotlib.lines import Line2D
 
 box_alpha = 0.3
 box_edgewidth = 2
+axis_linewidth = 2
 majorgrid_linewidth = 1.5
 
 
@@ -17,6 +18,7 @@ def boxplot_by_group(
     names: List[str],
     width: Optional[Union[float, List[float]]] = None,
     margin: Optional[float] = None,
+    show_zero_xaxis: bool = True,
     palette: Optional[List[Tuple[float, float, float]]] = None,
 ) -> List[Line2D]:
     if palette is None:
@@ -34,6 +36,9 @@ def boxplot_by_group(
 
     if margin is None:
         margin = 0.75 / len(names)
+
+    if show_zero_xaxis:
+        ax.axhline(y=0, color="black", linewidth=axis_linewidth)
 
     handles: List[Line2D] = []
 
