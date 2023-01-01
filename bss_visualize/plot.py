@@ -104,8 +104,8 @@ def _plot(
 
     for label_idx in range(len(labels)):
         label = labels[label_idx]
-        _y = y[label]
-        _x = x[label][: len(_y)]
+        _x = x[label]
+        _y = y[label][: len(_x)]
 
         (handle,) = ax.plot(
             _x,
