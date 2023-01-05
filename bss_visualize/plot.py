@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import seaborn as sns
@@ -15,8 +15,10 @@ def plot_by_iteration(
     labels: List[str] = None,
     n_iter: Optional[int] = None,
     step: int = 1,
-    marker: str = "o",
-    markersize: int = 10,
+    linestyle: Union[str, List[str]] = "-",
+    marker: Union[str, List[str]] = "o",
+    markersize: Union[int, List[int]] = 10,
+    markerfacecolor: Union[str, List[str]] = None,
     show_zero_xaxis: bool = True,
     palette: Optional[List[Tuple[float, float, float]]] = None,
 ) -> List[Line2D]:
@@ -42,8 +44,10 @@ def plot_by_iteration(
         iterations,
         step=step,
         labels=labels,
+        linestyle=linestyle,
         marker=marker,
         markersize=markersize,
+        markerfacecolor=markerfacecolor,
         palette=palette,
     )
 
@@ -57,8 +61,10 @@ def plot_by_elapsed_time(
     labels: List[str] = None,
     n_iter: Optional[int] = None,
     step: int = 1,
-    marker: str = "o",
-    markersize: int = 10,
+    linestyle: Union[str, List[str]] = "-",
+    marker: Union[str, List[str]] = "o",
+    markersize: Union[int, List[int]] = 10,
+    markerfacecolor: Union[str, List[str]] = None,
     show_zero_xaxis: bool = True,
     palette: Optional[List[Tuple[float, float, float]]] = None,
 ) -> List[Line2D]:
@@ -84,8 +90,10 @@ def plot_by_elapsed_time(
         iterations,
         step=step,
         labels=labels,
+        linestyle=linestyle,
         marker=marker,
         markersize=markersize,
+        markerfacecolor=markerfacecolor,
         palette=palette,
     )
 
@@ -98,12 +106,23 @@ def _plot(
     x: Dict,
     step: int = 1,
     labels: List[str] = None,
-    marker: str = "o",
-    markersize: int = 10,
+    linestyle: Union[str, List[str]] = "-",
+    marker: Union[str, List[str]] = "o",
+    markersize: Union[int, List[int]] = 10,
+    markerfacecolor: Union[str, List[str]] = None,
     palette: Optional[List[Tuple[float, float, float]]] = None,
 ):
     if palette is None:
         palette = sns.color_palette()
+
+    if type(linestyle) is not list:
+        linestyle = [linestyle] * len(labels)
+
+    if type(marker) is not list:
+        marker = [marker] * len(labels)
+
+    if type(markersize) is not list:
+        markersize = [markersize] * len(labels)
 
     handles = []
 
@@ -112,12 +131,22 @@ def _plot(
         _x = x[label]
         _y = y[label][: len(_x)]
 
+        kwargs = {}
+
+        if markerfacecolor is not None:
+            if type(markerfacecolor) is list:
+                kwargs["markerfacecolor"] = markerfacecolor[label_idx]
+            else:
+                kwargs["markerfacecolor"] = markerfacecolor
+
         (handle,) = ax.plot(
             _x[::step],
             _y[::step],
             color=palette[label_idx],
-            marker=marker,
-            markersize=markersize,
+            linestyle=linestyle[label_idx],
+            marker=marker[label_idx],
+            markersize=markersize[label_idx],
+            **kwargs,
         )
 
         handles.append(handle)
