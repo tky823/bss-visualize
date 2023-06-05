@@ -2,6 +2,67 @@
 A visualization toolkit for blind source separation.
 
 ## Examples
+### Plot
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+from bss_visualize import plot_by_elapsed_time, plot_by_iteration, set_tex_style
+
+params = {
+    "figure.dpi": 100,
+    "font.size": 20,
+}
+plt.rcParams.update(params)
+
+set_tex_style()
+
+data = {
+    "IP1": np.arange(1, 10),
+    "IP2": np.arange(3, 10),
+    "ISS1": np.arange(2, 10, 2),
+    "ISS2": np.arange(4, 12),
+}
+elapsed_time = {
+    "IP1": np.arange(9) / 5,
+    "IP2": np.arange(7),
+    "ISS1": np.arange(4),
+    "ISS2": np.arange(8) / 2,
+}
+labels = ["IP1", "IP2", "ISS1", "ISS2"]
+
+# plot by iteration
+fig, ax = plt.subplots(figsize=(12, 8))
+
+handles = plot_by_iteration(
+    ax,
+    data,
+    labels=labels,
+    linestyle=["-", "-", "--", "--"],
+    marker=["o", "o", "s", "s"],
+    palette=["darkgray", "black", "darkgray", "black"],
+)
+
+ax.legend(handles, labels, bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0)
+
+fig.savefig("SDRi-curve_by_iteration.pdf", bbox_inches="tight")
+fig.savefig("SDRi-curve_by_iteration.png", bbox_inches="tight")
+
+# plot by elapsed time
+fig, ax = plt.subplots(figsize=(12, 8))
+
+handles = plot_by_elapsed_time(ax, data, elapsed_time, labels=labels)
+
+ax.legend(handles, labels, bbox_to_anchor=(1.01, 1), loc="upper left", borderaxespad=0)
+
+fig.savefig("SDRi-curve_by_elapsed-time.pdf", bbox_inches="tight")
+fig.savefig("SDRi-curve_by_elapsed-time.png", bbox_inches="tight")
+```
+
+<img src="./figures/SDRi-curve_by_iteration.png" alt="SDR improvement curve by iteration" title="SDR improvement curve by iteration">
+<img src="./figures/SDRi-curve_by_elapsed-time.png" alt="SDR improvement curve by elapsed time" title="SDR improvement curve by elapsed time">
+
+
 ### Group Boxplots
 ```python
 import matplotlib.pyplot as plt
