@@ -153,7 +153,7 @@ def _plot(
 
     ax.set_axisbelow(True)
     ax.grid(
-        b=True,
+        visible=True,
         which="major",
         color="lightgray",
         linestyle="--",
